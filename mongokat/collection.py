@@ -183,14 +183,10 @@ class Collection(object):
         elif kwargs.get("write_concern"):
             write_concern = kwargs.get("write_concern")
 
+        setattr(self.document_class, 'fetched_fields', kwargs.get("projection"))
+        setattr(self.document_class, 'mongokat_collection', self)
         codec_options = CodecOptions(
-            document_class=(
-                self.document_class,
-                {
-                    "fetched_fields": kwargs.get("projection"),
-                    "mongokat_collection": self
-                }
-            )
+            document_class=self.document_class
         )
 
         return self.collection.with_options(
